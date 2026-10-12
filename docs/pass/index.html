@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="en-PH" data-v="c11247d627">
+<html lang="en-PH" data-v="42adb6728f">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Handa Pass: full CSE mock exams and 1,500 questions | Handa CSE</title>
-<meta name="description" content="Handa Pass early access: full CSE mock exams, 1,500 questions and a score predictor. Not on sale yet; join the list and pick how you would pay.">
+<meta name="description" content="Handa Pass pre-order: full CSE mock exams, 1,500 questions and a score predictor for the 2027 exam. Card pre-order with access by 15 January 2027, or join the GCash/Maya list.">
 <link rel="canonical" href="https://outils.vread.fr/handa-cse/pass/">
 <meta property="og:title" content="Handa Pass: full CSE mock exams and 1,500 questions | Handa CSE">
-<meta property="og:description" content="Handa Pass early access: full CSE mock exams, 1,500 questions and a score predictor. Not on sale yet; join the list and pick how you would pay.">
+<meta property="og:description" content="Handa Pass pre-order: full CSE mock exams, 1,500 questions and a score predictor for the 2027 exam. Card pre-order with access by 15 January 2027, or join the GCash/Maya list.">
 <meta property="og:url" content="https://outils.vread.fr/handa-cse/pass/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://outils.vread.fr/handa-cse/assets/og.png">
@@ -15,7 +15,7 @@
 <link rel="manifest" href="/handa-cse/manifest.webmanifest">
 <link rel="icon" href="/handa-cse/assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/handa-cse/assets/icon-192.png">
-<link rel="stylesheet" href="/handa-cse/assets/style.css?v=c11247d627">
+<link rel="stylesheet" href="/handa-cse/assets/style.css?v=42adb6728f">
 <script>(function(){var v;try{v=new URLSearchParams(location.search).get('p');if(v!=='a'&&v!=='b')v=localStorage.getItem('handa.p');if(v!=='a'&&v!=='b')v=Math.random()<.5?'a':'b';localStorage.setItem('handa.p',v)}catch(e){v=v==='a'||v==='b'?v:'a'}window.hVariant=v;window.hPrice=v==='b'?299:149})()</script>
 </head>
 <body data-page="pass">
@@ -25,7 +25,7 @@
 
 <div class="two">
 <div>
-<span class="kicker">Early access · not on sale yet</span>
+<span class="kicker">Pre-order · access by 15 January 2027</span>
 <h1>Handa Pass: full mock exams, 1,500 questions and a score predictor</h1>
 <p class="price"><span class="js-price">₱149</span> <small class="muted" style="font-size:1rem;font-weight:400">one time, until your 2027 exam</small></p>
 <p>The free reviewer has one question bank and one mock. Handa Pass is what we plan to add on top:</p>
@@ -36,17 +36,26 @@
 <li>A weak-area plan that sends you back to the subtopics you miss most.</li>
 </ul>
 <p>Payment is one time. No subscription, no auto-renewal.</p>
-<p class="note">There is no payment page yet and we charge nothing today. If enough people join before the 14 March 2027 exam, we open Handa Pass and e-mail you once with the price shown here. If we decide not to build it, we e-mail you once to say so and delete your address.</p>
+<p class="note">Handa Pass is being built. If you pre-order, we e-mail your access on or before <b>15 January 2027</b>, two months before the 14 March 2027 exam. If we miss that date, we refund the full amount to your card without you having to ask, and you can get a full refund any time before delivery by replying to the receipt e-mail.</p>
 </div>
-<div class="card" id="signup-card">
-<h2 style="margin-top:0">Join the early-access list</h2>
+<div>
+<div class="card" id="buy-card">
+<h2 style="margin-top:0">Pre-order by card</h2>
+<p><b><span class="js-price">₱149</span></b>, charged in pesos by READ FRANCE SAS. Visa, Mastercard and other cards. You get a receipt by e-mail.</p>
+<p><button class="btn" type="button" id="buy-open" data-mesure="checkout_open">Pre-order for <span class="js-price">₱149</span></button></p>
+<div id="buy"></div>
+<p class="muted" style="font-size:.88rem;margin-bottom:0">Buyers in the EU cannot order.</p>
+</div>
+<div class="card" id="signup-card" style="margin-top:16px">
+<h2 style="margin-top:0">No card? Join the GCash and Maya list</h2>
+<p class="muted">We cannot take GCash or Maya yet. Tell us how you would pay and we e-mail you once when it works. Free, no commitment.</p>
 <form id="signup" novalidate>
 <label class="field" for="email">E-mail</label>
 <input id="email" name="email" type="email" autocomplete="email" required placeholder="juan@example.com">
 <fieldset style="margin-top:12px"><legend>Paano ka magbabayad? (How would you pay?)</legend><div class="opts">
 <label class="opt"><input type="radio" name="pay" value="gcash" required> GCash</label>
 <label class="opt"><input type="radio" name="pay" value="maya"> Maya</label>
-<label class="opt"><input type="radio" name="pay" value="card"> Debit or credit card</label>
+<label class="opt"><input type="radio" name="pay" value="card"> Card, later</label>
 <label class="opt"><input type="radio" name="pay" value="other"> Iba pa (other)</label>
 </div>
 <div id="pay-other-wrap" class="hidden" style="margin-top:8px"><label class="field" for="pay_other">Which one?</label><input id="pay_other" name="pay_other" type="text" maxlength="60" placeholder="e.g. 7-Eleven CLiQQ, ShopeePay, bank transfer"></div>
@@ -68,9 +77,12 @@
 </form>
 </div>
 </div>
+</div>
 <h2>Questions</h2>
-<h3>Why not sell it now?</h3>
-<p>We would rather check first that people want it and how they would pay. Most reviewers in the Philippines pay with GCash or Maya, and we can only take cards today. Your answer to "Paano ka magbabayad?" decides what we set up.</p>
+<h3>Why a pre-order?</h3>
+<p>We build the 1,500 questions and the extra mock forms only if enough people want them, and we would rather say so than pretend they exist. Paying now reserves the launch price; the refund promise above is written on your receipt.</p>
+<h3>Why only cards?</h3>
+<p>READ FRANCE SAS is a French company and can only take cards for now. Most reviewers in the Philippines pay with GCash or Maya, so your answer to "Paano ka magbabayad?" decides what we set up next.</p>
 <h3>Is the free reviewer going away?</h3>
 <p>No. Practice and the mock exam stay free, with no sign-up.</p>
 <h3>Is this from the CSC?</h3>
@@ -81,8 +93,8 @@
 <p>Published by READ FRANCE SAS (SIREN 988 741 773), 11 rue Rouvet, 75019 Paris, France. Built and run by Octave, the company's AI agent. Contact: <a href="mailto:octave@vread.fr">octave@vread.fr</a></p>
 <p><a href="/handa-cse/privacy/">Privacy notice (R.A. 10173)</a> · <a href="/handa-cse/terms/">Terms of use</a> · <a href="/handa-cse/about/">Sources and method</a> · Updated 13 October 2026</p>
 </div></footer>
-<script src="/handa-cse/assets/app.js?v=c11247d627" defer></script>
-<script src="/handa-cse/assets/mesure.js?v=c11247d627" defer></script>
+<script src="/handa-cse/assets/app.js?v=42adb6728f" defer></script>
+<script src="/handa-cse/assets/mesure.js?v=42adb6728f" defer></script>
 <script>if('serviceWorker'in navigator)addEventListener('load',function(){navigator.serviceWorker.register('/handa-cse/sw.js').catch(function(){})})</script>
 </body>
 </html>

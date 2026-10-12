@@ -193,3 +193,18 @@ test('tracking: anonymous, cookieless hits only on the real host', async ({ page
   expect(body.site).toBe('handa-cse');
   expect(await page.context().cookies()).toHaveLength(0);
 });
+
+test('Handa Pass: card pre-order loads the shared checkout in PHP for the shown variant', async ({ page }) => {
+  await page.goto('pass/?p=b');
+  const before = await page.evaluate(() => typeof window.OctaveCheckout);
+  expect(before).toBe('undefined'); // Stripe code is not loaded until the click
+  await expect(page.locator('#buy-open')).toContainText('₱299');
+  await page.locator('#buy-open').click();
+  await page.waitForFunction(() => !!window.OctaveCheckout);
+  await expect(page.locator('#buy input[type=email], #buy input[name=email]').first()).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator('#buy iframe[src*="js.stripe.com"]').first()).toBeAttached({ timeout: 20_000 });
+  await expect(page.locator('#buy')).toContainText(/299/);
+  await noHScroll(page);
+  await page.waitForTimeout(2500);
+  await shot(page, 'pass-checkout');
+});

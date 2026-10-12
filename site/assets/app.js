@@ -363,6 +363,23 @@
   function initPass() {
     var f = $('#signup'), msg = $('#signup-msg');
     track('pass_view');
+    // Card pre-order: the shared octave-global-checkout module (Stripe) loads only on click; it counts its own checkout_view and checkout_start.
+    var open = $('#buy-open');
+    if (open) open.addEventListener('click', function () {
+      open.disabled = true;
+      var price = window.hVariant === 'b' ? 299 : 149;
+      var s = document.createElement('script');
+      s.src = B + 'assets/og-checkout.js?v=' + V;
+      s.onload = function () {
+        open.classList.add('hidden');
+        window.OctaveCheckout.mount('#buy', {
+          product: 'handa-pass-' + price + '-php', amount: price * 100, currency: 'php', venture: 'as-ph-05', lang: 'en', country: 'PH',
+          appearance: { variables: { colorPrimary: '#0d6b4d', borderRadius: '10px' } },
+        });
+      };
+      s.onerror = function () { open.disabled = false; alert('Could not load the payment form. Check your connection and try again.'); };
+      document.head.appendChild(s);
+    });
     $$('input[name=pay]', f).forEach(function (r) { r.addEventListener('change', function () { $('#pay-other-wrap').classList.toggle('hidden', f.pay.value !== 'other'); }); });
     f.addEventListener('submit', function (e) {
       e.preventDefault();

@@ -119,9 +119,9 @@ ${factsTable()}
 <p>What it does not do: it has no actual CSE questions (nobody outside the CSC has them, and pages that sell "leaked" items are scams), and a good mock score is not a guarantee. The CSC computes a general rating and does not publish how raw scores convert, so treat our percentage as practice feedback.</p>
 </div>
 <div class="card">
-<h3 style="margin-top:0">Handa Pass, coming soon</h3>
+<h3 style="margin-top:0">Handa Pass, pre-order</h3>
 <p>Full mock exams, 1,500 questions and a score predictor. <b><span class="js-price">₱${SITE.prices.a}</span> one time</b>, until your 2027 exam.</p>
-<p class="muted">Not on sale yet. Join the early-access list and we tell you once when it opens.</p>
+<p class="muted">Access by 15 January 2027, or your money back automatically. Card now; GCash and Maya list for later.</p>
 <a class="btn small" href="${B}pass/" data-mesure="pass_open">See Handa Pass</a>
 </div>
 </div>
@@ -201,11 +201,11 @@ export function pass() {
   return layout({
     path: 'pass/', active: 'pass/', app: 'pass',
     title: 'Handa Pass: full CSE mock exams and 1,500 questions | Handa CSE',
-    desc: 'Handa Pass early access: full CSE mock exams, 1,500 questions and a score predictor. Not on sale yet; join the list and pick how you would pay.',
+    desc: 'Handa Pass pre-order: full CSE mock exams, 1,500 questions and a score predictor for the 2027 exam. Card pre-order with access by 15 January 2027, or join the GCash/Maya list.',
     body: `
 <div class="two">
 <div>
-<span class="kicker">Early access · not on sale yet</span>
+<span class="kicker">Pre-order · access by 15 January 2027</span>
 <h1>Handa Pass: full mock exams, 1,500 questions and a score predictor</h1>
 <p class="price"><span class="js-price">₱${SITE.prices.a}</span> <small class="muted" style="font-size:1rem;font-weight:400">one time, until your 2027 exam</small></p>
 <p>The free reviewer has one question bank and one mock. Handa Pass is what we plan to add on top:</p>
@@ -216,17 +216,26 @@ export function pass() {
 <li>A weak-area plan that sends you back to the subtopics you miss most.</li>
 </ul>
 <p>Payment is one time. No subscription, no auto-renewal.</p>
-<p class="note">There is no payment page yet and we charge nothing today. If enough people join before the ${EXAM.next.label} exam, we open Handa Pass and e-mail you once with the price shown here. If we decide not to build it, we e-mail you once to say so and delete your address.</p>
+<p class="note">Handa Pass is being built. If you pre-order, we e-mail your access on or before <b>15 January 2027</b>, two months before the ${EXAM.next.label} exam. If we miss that date, we refund the full amount to your card without you having to ask, and you can get a full refund any time before delivery by replying to the receipt e-mail.</p>
 </div>
-<div class="card" id="signup-card">
-<h2 style="margin-top:0">Join the early-access list</h2>
+<div>
+<div class="card" id="buy-card">
+<h2 style="margin-top:0">Pre-order by card</h2>
+<p><b><span class="js-price">₱${SITE.prices.a}</span></b>, charged in pesos by ${SITE.company.name}. Visa, Mastercard and other cards. You get a receipt by e-mail.</p>
+<p><button class="btn" type="button" id="buy-open" data-mesure="checkout_open">Pre-order for <span class="js-price">₱${SITE.prices.a}</span></button></p>
+<div id="buy"></div>
+<p class="muted" style="font-size:.88rem;margin-bottom:0">Buyers in the EU cannot order.</p>
+</div>
+<div class="card" id="signup-card" style="margin-top:16px">
+<h2 style="margin-top:0">No card? Join the GCash and Maya list</h2>
+<p class="muted">We cannot take GCash or Maya yet. Tell us how you would pay and we e-mail you once when it works. Free, no commitment.</p>
 <form id="signup" novalidate>
 <label class="field" for="email">E-mail</label>
 <input id="email" name="email" type="email" autocomplete="email" required placeholder="juan@example.com">
 <fieldset style="margin-top:12px"><legend>Paano ka magbabayad? (How would you pay?)</legend><div class="opts">
 <label class="opt"><input type="radio" name="pay" value="gcash" required> GCash</label>
 <label class="opt"><input type="radio" name="pay" value="maya"> Maya</label>
-<label class="opt"><input type="radio" name="pay" value="card"> Debit or credit card</label>
+<label class="opt"><input type="radio" name="pay" value="card"> Card, later</label>
 <label class="opt"><input type="radio" name="pay" value="other"> Iba pa (other)</label>
 </div>
 <div id="pay-other-wrap" class="hidden" style="margin-top:8px"><label class="field" for="pay_other">Which one?</label><input id="pay_other" name="pay_other" type="text" maxlength="60" placeholder="e.g. 7-Eleven CLiQQ, ShopeePay, bank transfer"></div>
@@ -248,9 +257,12 @@ export function pass() {
 </form>
 </div>
 </div>
+</div>
 <h2>Questions</h2>
-<h3>Why not sell it now?</h3>
-<p>We would rather check first that people want it and how they would pay. Most reviewers in the Philippines pay with GCash or Maya, and we can only take cards today. Your answer to "Paano ka magbabayad?" decides what we set up.</p>
+<h3>Why a pre-order?</h3>
+<p>We build the 1,500 questions and the extra mock forms only if enough people want them, and we would rather say so than pretend they exist. Paying now reserves the launch price; the refund promise above is written on your receipt.</p>
+<h3>Why only cards?</h3>
+<p>READ FRANCE SAS is a French company and can only take cards for now. Most reviewers in the Philippines pay with GCash or Maya, so your answer to "Paano ka magbabayad?" decides what we set up next.</p>
 <h3>Is the free reviewer going away?</h3>
 <p>No. Practice and the mock exam stay free, with no sign-up.</p>
 <h3>Is this from the CSC?</h3>
@@ -307,6 +319,8 @@ export function privacy() {
 <li><b>How long:</b> until Handa Pass opens and we have e-mailed you, and at the latest until 31 October 2027 (after the August 2027 exam). Then we delete it.</li>
 <li><b>Who sees it:</b> ${SITE.company.name} only. We do not sell or share it, and we do not use it for advertising.</li>
 </ul>
+<h2>Card pre-orders</h2>
+<p>If you pre-order Handa Pass, the checkout asks for your e-mail, name and country (and a company name and tax ID if you buy for a company). Stripe Payments Europe processes the card payment; we never see the card number. We keep the order, your e-mail and the receipt in ${SITE.company.name}'s Google account for as long as French accounting law requires (10 years for receipts), and use your e-mail only to deliver Handa Pass, send the receipt and handle refunds. Legal basis: the contract (R.A. 10173, Sec. 12(b)).</p>
 <h2>Your rights</h2>
 <p>Under R.A. 10173 you can be informed, access your data, object, have it corrected, have it erased or blocked, get a copy, and claim damages. Use the form below or write to <a href="mailto:${SITE.email}">${SITE.email}</a>. Withdrawal and erasure take effect at once. You can also complain to the ${cite('npc')}.</p>
 <form id="rights" class="card" novalidate data-app="rights">
@@ -348,7 +362,7 @@ export function terms() {
 <h2>Content</h2>
 <p>The questions, explanations and code are © ${SITE.company.name} 2026. You may use them for your own study and share links to them. Do not copy the question bank to another site, app or paid product. Legal texts quoted in explanations are public documents.</p>
 <h2>Handa Pass</h2>
-<p>Handa Pass is not on sale. Joining the early-access list is free and does not commit you to buy. If it opens, its price and terms will be shown before any payment.</p>
+<p>Handa Pass is sold as a pre-order: it is still being built. The price is shown before payment and is charged once, in Philippine pesos. ${SITE.company.name} delivers access by e-mail on or before 15 January 2027; if it does not, it refunds the full amount automatically. Before delivery you can cancel and get a full refund by replying to the receipt e-mail. Joining the GCash and Maya list is free and does not commit you to buy.</p>
 <h2>Law</h2>
 <p>These terms are governed by French law, without prejudice to the mandatory consumer protections of the Philippines where you live.</p>
 </div>`,
