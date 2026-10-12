@@ -1,0 +1,17 @@
+{
+  "name": "handa-cse",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Handa CSE: free reviewer for the Philippine Civil Service Exam (CSE-PPT), by READ FRANCE SAS.",
+  "license": "UNLICENSED",
+  "author": "READ FRANCE SAS",
+  "type": "module",
+  "scripts": {
+    "validate": "node content/validate.mjs",
+    "build": "node site/build.mjs",
+    "test": "node --test tests/unit/*.test.mjs",
+    "serve": "node site/serve.mjs 4820",
+    "e2e": "playwright test"
+  },
+  "devDependencies": { "@playwright/test": "1.62.1" }
+}
