@@ -6,7 +6,8 @@
  *   track        cookieless, anonymous daily counters (Stats tab), same pattern as octave-checkout Track.js.
  *                A hit flagged `excluded` by mesure.js (crawler or headless user agent, navigator.webdriver, or
  *                our own tests with octave_notrack=1) goes to the Exclus tab by reason instead, so the summary
- *                shows counted and raw views side by side.
+ *                shows counted and raw views side by side. A hit without `v` (old snippet, e.g. cached by a
+ *                crawler) is counted there too, as `legacy`.
  *   signup       "Handa Pass" early-access sign-up (fake door: nothing is sold or charged) (Signups tab)
  *   rights       data-subject request under R.A. 10173: withdraw | erase | access | correct (Requests tab)
  *   ping         health check
@@ -39,7 +40,8 @@ var STATS_HEADER = ['date', 'site', 'page', 'event', 'variant', 'source', 'mediu
 var STATS_KEYS = 8;
 var EXCL_HEADER = ['date', 'site', 'page', 'event', 'reason', 'count', 'mobile', 'desktop', 'updated_at'];
 var EXCL_KEYS = 5;
-var EXCL_REASONS = ['webdriver', 'bot', 'notrack'];
+// legacy: a hit without v (snippet before 2026-10-13, still cached by search-engine renderers) cannot be screened.
+var EXCL_REASONS = ['webdriver', 'bot', 'notrack', 'legacy'];
 
 function doGet(e) { return handle_(e, (e && e.parameter) || {}); }
 
@@ -165,7 +167,7 @@ function validateTrack_(req) {
     variant: req.variant === 'a' || req.variant === 'b' ? req.variant : '',
     source: sourceOf_(req), medium: token_(req.utm_medium, 30), campaign: token_(req.utm_campaign, 50),
     device: req.device === 'mobile' || req.device === 'desktop' ? req.device : '',
-    reason: req.excluded ? (EXCL_REASONS.indexOf(String(req.excluded)) >= 0 ? String(req.excluded) : 'bot') : '',
+    reason: req.excluded ? (EXCL_REASONS.indexOf(String(req.excluded)) >= 0 ? String(req.excluded) : 'bot') : (req.v ? '' : 'legacy'),
   };
 }
 

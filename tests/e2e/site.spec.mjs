@@ -202,7 +202,7 @@ test('tracking: anonymous, cookieless hits only on the real host; our runs count
   if (!LIVE) { expect(hits.length).toBe(0); return; }
   expect(hits.length).toBeGreaterThanOrEqual(1);
   const body = JSON.parse(hits[0].postData());
-  const allowed = ['device', 'event', 'page', 'ref_domain', 'site', 'ts', 'utm_campaign', 'utm_medium', 'utm_source', 'variant', 'excluded'];
+  const allowed = ['device', 'event', 'page', 'ref_domain', 'site', 'ts', 'utm_campaign', 'utm_medium', 'utm_source', 'variant', 'excluded', 'v'];
   expect(Object.keys(body).every((k) => allowed.includes(k))).toBe(true); // nothing else: no ID, no user agent
   expect(body.event).toBe('view');
   expect(body.site).toBe('handa-cse');

@@ -44,6 +44,6 @@ npx playwright test     # local, 390 px and 1440 px
 BASE_URL=https://outils.vread.fr/handa-cse/ npx playwright test   # live: also real form -> Sheet and tracking
 ```
 
-Audience hits from crawlers and headless browsers (user agent checked in the browser, never sent), `navigator.webdriver` and our own runs (`?octave_notrack=1` or `localStorage.octave_notrack=1`) go to the `Exclus` tab by reason; `summary` returns `views` per day (counted, excluded, raw) and `excluded`. A prerendered page counts only once opened. `npm test` checks these rules.
+Audience hits from crawlers and headless browsers (user agent checked in the browser, never sent), `navigator.webdriver` and our own runs (`?octave_notrack=1` or `localStorage.octave_notrack=1`) go to the `Exclus` tab by reason, and so does any hit without `v` (reason `legacy`: the pre-2026-10-13 snippet, still cached by crawlers); `summary` returns `views` per day (counted, excluded, raw) and `excluded`. A prerendered page counts only once opened. `npm test` checks these rules.
 
 Test sign-ups use `@example.com` and are flagged `test` (not counted in `Stats`); remove them with `purge_tests`. In live runs the e2e sets `octave_notrack=1` and answers audience hits locally, except the tracking test, which (with `HANDA_ADMIN_KEY` set) checks that its hit lands in `Exclus` and not in `Stats`.
