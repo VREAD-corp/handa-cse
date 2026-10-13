@@ -230,7 +230,7 @@ function signup_(req) {
     } else {
       sh.appendRow([stamp, stamp].concat(values));
     }
-    if (!row) incrementStat_({ date: phDate_(now_()), site: 'handa-cse', page: '/pass/', event: 'signup_ok', variant: rec.variant, source: '(server)', medium: '', campaign: '', device: '' });
+    if (!row && !rec.test) incrementStat_({ date: phDate_(now_()), site: 'handa-cse', page: '/pass/', event: 'signup_ok', variant: rec.variant, source: '(server)', medium: '', campaign: '', device: '' });
     return !!row;
   });
   return { ok: true, updated: updated };

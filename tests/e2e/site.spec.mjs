@@ -8,6 +8,13 @@ async function noHScroll(page) {
   const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(over).toBeLessThanOrEqual(0);
 }
+// Live runs: audience hits (Handa and the shared checkout) are answered locally, so the e2e never inflates the
+// real Stats counters. Sign-up and rights POSTs still reach the live Sheet (flagged test, removed with purge_tests).
+const TRACK = /script\.google\.com\/macros\/s\/[^/]+\/exec\?action=track/;
+test.beforeEach(async ({ page }) => {
+  if (LIVE) await page.route(TRACK, (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
+});
+
 async function mockEndpoint(page, bodies) {
   await page.route(EP, async (route) => {
     const req = route.request();

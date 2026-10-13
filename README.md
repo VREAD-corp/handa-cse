@@ -44,4 +44,4 @@ npx playwright test     # local, 390 px and 1440 px
 BASE_URL=https://outils.vread.fr/handa-cse/ npx playwright test   # live: also real form -> Sheet and tracking
 ```
 
-Test sign-ups use `@example.com` and are flagged `test`; remove them with `purge_tests`.
+Test sign-ups use `@example.com` and are flagged `test` (not counted in `Stats`); remove them with `purge_tests`. In live runs the e2e answers audience hits locally, so `Stats` stays clean.
