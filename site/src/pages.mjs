@@ -310,7 +310,7 @@ export function privacy() {
 <h2>Practice and mock results stay on your device</h2>
 <p>Your answers, scores and mock history are saved in your browser's local storage on this device. They are never sent to us. Clearing your browser data deletes them.</p>
 <h2>Anonymous visit counts</h2>
-<p>We count visits without cookies and without any identifier. Each page sends the page path, the event (for example "mock submitted"), the domain of the site that sent you, the campaign tags in the link (utm_source, utm_medium, utm_campaign), the price variant you saw (a or b) and whether your screen is narrower than 768 pixels. We do not send or keep your IP address, browser details or any ID, and hits are added into daily totals. If your browser sends "Do Not Track" or "Global Privacy Control", nothing is sent.</p>
+<p>We count visits without cookies and without any identifier. Each page sends the page path, the event (for example "mock submitted"), the domain of the site that sent you, the campaign tags in the link (utm_source, utm_medium, utm_campaign), the price variant you saw (a or b) and whether your screen is narrower than 768 pixels. We do not send or keep your IP address, browser details or any ID, and hits are added into daily totals. If your browser sends "Do Not Track" or "Global Privacy Control", nothing is sent. Search-engine robots and automated browsers (recognised inside your browser; their signature is not sent) are counted separately, and a page your browser preloads counts only if you open it.</p>
 <h2>Early-access list for Handa Pass</h2>
 <ul class="plain">
 <li><b>What we collect:</b> your e-mail address, the payment method you would use, your level and your exam date, the price you were shown, and the page and campaign you came from.</li>

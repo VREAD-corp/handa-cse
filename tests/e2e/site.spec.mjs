@@ -2,16 +2,21 @@ import { test, expect } from '@playwright/test';
 
 const LIVE = !!process.env.BASE_URL;
 const EP = /script\.google\.com\/macros\/s\/AKfycby4di9DZ/;
+const EP_URL = 'https://script.google.com/macros/s/AKfycby4di9DZaiESNkujLeJtDkmL6JPXDNV9aQoXAEhDmCCtrKG205rHYL_yoKfT4cqHtmi6g/exec';
 const shot = (page, name) => page.screenshot({ path: `test-results/shots/${name}-${page.viewportSize().width}.png`, fullPage: true });
 
 async function noHScroll(page) {
   const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(over).toBeLessThanOrEqual(0);
 }
-// Live runs: audience hits (Handa and the shared checkout) are answered locally, so the e2e never inflates the
-// real Stats counters. Sign-up and rights POSTs still reach the live Sheet (flagged test, removed with purge_tests).
+// Live runs: every page sets octave_notrack=1, so a Handa hit that reaches the backend lands in the Exclus tab, never
+// in Stats. Audience hits are also answered locally (the shared checkout's backend has no excluded counter), except
+// in the tracking test, which checks the real excluded counter. Sign-up and rights POSTs still reach the live Sheet
+// (flagged test, removed with purge_tests).
 const TRACK = /script\.google\.com\/macros\/s\/[^/]+\/exec\?action=track/;
+const ADMIN_KEY = process.env.HANDA_ADMIN_KEY || '';
 test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => { try { localStorage.setItem('octave_notrack', '1'); } catch {} });
   if (LIVE) await page.route(TRACK, (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
 });
 
@@ -186,19 +191,29 @@ test('PWA: manifest, service worker, works offline', async ({ page, context }) =
   await context.setOffline(false);
 });
 
-test('tracking: anonymous, cookieless hits only on the real host', async ({ page }) => {
+test('tracking: anonymous, cookieless hits only on the real host; our runs counted apart', async ({ page, request }) => {
   const hits = [];
   page.on('request', (r) => { if (EP.test(r.url()) && r.url().includes('action=track')) hits.push(r); });
+  const summary = async () => (await (await request.post(EP_URL, { data: JSON.stringify({ action: 'summary', key: ADMIN_KEY }) })).json());
+  const before = LIVE && ADMIN_KEY ? await summary() : null;
+  if (before) await page.unroute(TRACK); // this hit goes to the real backend, into the excluded counter
   await page.goto('./');
   await page.waitForTimeout(1500);
   if (!LIVE) { expect(hits.length).toBe(0); return; }
   expect(hits.length).toBeGreaterThanOrEqual(1);
   const body = JSON.parse(hits[0].postData());
-  const allowed = ['device', 'event', 'page', 'ref_domain', 'site', 'ts', 'utm_campaign', 'utm_medium', 'utm_source', 'variant'];
+  const allowed = ['device', 'event', 'page', 'ref_domain', 'site', 'ts', 'utm_campaign', 'utm_medium', 'utm_source', 'variant', 'excluded'];
   expect(Object.keys(body).every((k) => allowed.includes(k))).toBe(true); // nothing else: no ID, no user agent
   expect(body.event).toBe('view');
   expect(body.site).toBe('handa-cse');
+  expect(body.excluded).toBe('notrack');
   expect(await page.context().cookies()).toHaveLength(0);
+  if (!before) return;
+  const day = Object.keys(before.views || {}).sort().pop();
+  const ex = (s) => Object.entries(s.excluded || {}).filter(([k]) => / view notrack$/.test(k)).reduce((a, [, v]) => a + v, 0);
+  await expect.poll(async () => ex(await summary()), { timeout: 30_000, intervals: [3000] }).toBeGreaterThan(ex(before));
+  const after = await summary();
+  if (day && after.views[day]) expect(after.views[day].counted, 'test hits must not count as visits').toBe(before.views[day].counted);
 });
 
 test('Handa Pass: card pre-order loads the shared checkout in PHP for the shown variant', async ({ page }) => {
