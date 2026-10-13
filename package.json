@@ -9,7 +9,7 @@
   "scripts": {
     "validate": "node content/validate.mjs",
     "build": "node site/build.mjs",
-    "test": "node --test tests/unit/*.test.mjs",
+    "test": "node --test tests/unit/*.test.mjs && node tests/unit/cro.check.mjs site/assets/cro.js && node tests/unit/cro-gas.check.mjs gas/src/Cro.js",
     "serve": "node site/serve.mjs 4820",
     "e2e": "playwright test"
   },

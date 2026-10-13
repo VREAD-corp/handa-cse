@@ -19,6 +19,8 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var track = function (e) { try { window.hTrack && window.hTrack(e); } catch (x) { /* ignore */ } };
+  // A/B conversion goal of the shared cro.js (counted once per tab for the price variant shown).
+  var goal = function (g) { try { window.octaveCro && window.octaveCro.goal(g); } catch (x) { /* ignore */ } };
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function pct(c, n) { return n ? Math.round((100 * c) / n) : 0; }
@@ -264,7 +266,7 @@
     intro.classList.add('hidden'); box.classList.remove('hidden');
     var items = s.ids.map(function (id) { return d.byId[id]; }).filter(Boolean);
     var timer;
-    box.innerHTML = '<div class="examhead"><div class="row"><b>' + LEVELS[s.level].name + ' mock</b><span>Natitirang oras: <span class="timer" id="timer"></span></span><button class="btn small" type="button" id="submit">Ipasa</button></div></div><div class="card" id="qbox"></div><details class="nav card" style="margin-top:12px"' + (innerWidth >= 820 ? ' open' : '') + '><summary>Answer sheet (<span id="nans">0</span>/' + items.length + ' answered)</summary><div class="grid" id="grid">' +
+    box.innerHTML = '<div class="examhead"><div class="row"><b>' + LEVELS[s.level].name + ' mock</b><span>Natitirang oras: <span class="timer" id="timer"></span></span><button class="btn small" type="button" id="submit">Ipasa</button></div></div><div class="card" id="qbox"></div><details class="nav card" id="answer-sheet" style="margin-top:12px"' + (innerWidth >= 820 ? ' open' : '') + '><summary>Answer sheet (<span id="nans">0</span>/' + items.length + ' answered)</summary><div class="grid" id="grid">' +
       items.map(function (it, i) { return '<button type="button" data-q="' + i + '" aria-label="Item ' + (i + 1) + '">' + (i + 1) + '</button>'; }).join('') + '</div></details>';
     function tick() {
       var left = s.end - Date.now();
@@ -367,6 +369,7 @@
     var open = $('#buy-open');
     if (open) open.addEventListener('click', function () {
       open.disabled = true;
+      goal('checkout'); // the payment form opens (og-checkout has no start callback; it counts its own checkout_start)
       var price = window.hVariant === 'b' ? 299 : 149;
       var s = document.createElement('script');
       s.src = B + 'assets/og-checkout.js?v=' + V;
@@ -375,6 +378,7 @@
         window.OctaveCheckout.mount('#buy', {
           product: 'handa-pass-' + price + '-php', amount: price * 100, currency: 'php', venture: 'as-ph-05', lang: 'en', country: 'PH',
           appearance: { variables: { colorPrimary: '#0d6b4d', borderRadius: '10px' } },
+          onSuccess: function () { goal('paid'); },
         });
       };
       s.onerror = function () { open.disabled = false; alert('Could not load the payment form. Check your connection and try again.'); };
@@ -392,6 +396,7 @@
       var body = { action: 'signup', email: email, pay: f.pay.value, pay_other: f.pay_other.value, level: f.level.value || 'unsure', sitting: f.sitting.value || 'unsure', variant: window.hVariant || 'a', consent: true, consent_version: CONSENT, page: location.pathname, website: f.website.value, ref_domain: document.referrer.split('/')[2] || '', utm_source: q.get('utm_source') || '' };
       fetch(ENDPOINT, { method: 'POST', body: JSON.stringify(body), credentials: 'omit' }).then(function (r) { return r.json(); }).then(function (r) {
         if (!r.ok) throw new Error(r.error || 'error');
+        goal('signup');
         msg.className = 'msg ok';
         msg.innerHTML = '<b>Salamat! You are on the list.</b> We will e-mail ' + esc(email) + ' once, when Handa Pass opens. Meanwhile, the free <a href="' + B + 'mock/">mock exam</a> is ready.';
         f.reset();

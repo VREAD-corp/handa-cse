@@ -131,6 +131,7 @@ test('Handa Pass: price variant, payment question, early-access POST', async ({ 
   await expect(page.locator('.price .js-price')).toHaveText('₱299');
   await page.goto('pass/?p=a');
   await expect(page.locator('.price .js-price')).toHaveText('₱149');
+  await page.evaluate(() => { window.__goals = []; const g = window.octaveCro.goal; window.octaveCro.goal = (m) => { window.__goals.push(m); return g(m); }; });
   await page.getByRole('button', { name: 'Join the list (free)' }).click();
   await expect(page.locator('#signup-msg')).toContainText('e-mail');
   await page.fill('#email', `e2e-${page.viewportSize().width}-${Date.now()}@example.com`);
@@ -147,6 +148,7 @@ test('Handa Pass: price variant, payment question, early-access POST', async ({ 
   await shot(page, 'pass-form');
   await page.getByRole('button', { name: 'Join the list (free)' }).click();
   await expect(page.locator('#signup-msg')).toContainText('Salamat', { timeout: 30_000 });
+  expect(await page.evaluate(() => window.__goals)).toEqual(['signup']); // A/B goal of cro.js, once on success
   if (!LIVE) {
     const b = bodies.find((x) => x.action === 'signup');
     expect(b).toMatchObject({ pay: 'gcash', level: 'sub', sitting: '2027-03', variant: 'a', consent: true, consent_version: 'ea-2026-10-13' });
@@ -154,11 +156,35 @@ test('Handa Pass: price variant, payment question, early-access POST', async ({ 
   await shot(page, 'pass-done');
 });
 
+test('price test via cro.js: forced variant, one draw per tab, nothing kept per browser, nothing sent by our runs', async ({ page }) => {
+  const cro = [];
+  page.on('request', (r) => { if (TRACK.test(r.url()) && /"kind":"cro"/.test(r.postData() || '')) cro.push(r); });
+  await page.addInitScript(() => { try { localStorage.setItem('handa.p', 'a'); } catch {} }); // old per-browser draw
+  const res = await page.goto('pass/?p=b&octave_notrack=1');
+  expect(res.status()).toBe(200);
+  await expect(page.locator('script[src*="assets/cro.js"]')).toHaveAttribute('data-site', 'handa-cse');
+  expect(await page.evaluate(() => [window.octaveCro.v('price'), window.hVariant, window.hPrice, document.documentElement.dataset.xpPrice, sessionStorage.getItem('oxp_price'), localStorage.getItem('handa.p')]))
+    .toEqual(['b', 'b', 299, 'b', 'b', null]);
+  for (const sel of ['.price .js-price', '#buy-card .js-price', '#buy-open .js-price']) await expect(page.locator(sel).first()).toHaveText('₱299');
+  await page.goto('./?octave_notrack=1'); // same tab, no parameter: the tab keeps its variant
+  await expect(page.locator('.js-price').first()).toHaveText('₱299');
+  const fresh = await page.context().newPage(); // a new tab draws again, and shows the price of its own draw
+  await fresh.goto('pass/?octave_notrack=1');
+  const [v, price] = await fresh.evaluate(() => [window.hVariant, window.hPrice]);
+  expect(['a', 'b']).toContain(v);
+  expect(price).toBe(v === 'b' ? 299 : 149);
+  await expect(fresh.locator('.price .js-price')).toHaveText('₱' + price);
+  await fresh.close();
+  await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+  await page.waitForTimeout(500);
+  expect(cro).toHaveLength(0); // octave_notrack=1: variants apply, counters are not sent
+});
+
 test('privacy: notice and rights request', async ({ page }) => {
   const bodies = [];
   if (!LIVE) await mockEndpoint(page, bodies);
   await page.goto('privacy/');
-  for (const t of ['R.A. 10173', 'National Privacy Commission', 'local storage', '31 October 2027']) await expect(page.locator('main')).toContainText(t);
+  for (const t of ['R.A. 10173', 'Data Privacy Act of 2012', 'National Privacy Commission', 'local storage', '31 October 2027', 'never what you typed', 'Price test (A/B)', 'deletes when you close the tab']) await expect(page.locator('main')).toContainText(t);
   await page.fill('#r-email', `e2e-${Date.now()}@example.com`);
   await page.getByRole('button', { name: 'Send request' }).click();
   await expect(page.locator('#rights-msg')).toContainText('Done', { timeout: 30_000 });
@@ -221,8 +247,10 @@ test('Handa Pass: card pre-order loads the shared checkout in PHP for the shown 
   const before = await page.evaluate(() => typeof window.OctaveCheckout);
   expect(before).toBe('undefined'); // Stripe code is not loaded until the click
   await expect(page.locator('#buy-open')).toContainText('₱299');
+  await page.evaluate(() => { window.__goals = []; const g = window.octaveCro.goal; window.octaveCro.goal = (m) => { window.__goals.push(m); return g(m); }; });
   await page.locator('#buy-open').click();
   await page.waitForFunction(() => !!window.OctaveCheckout);
+  expect(await page.evaluate(() => window.__goals)).toEqual(['checkout']); // A/B goal: the payment form opened
   await expect(page.locator('#buy input[type=email], #buy input[name=email]').first()).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('#buy iframe[src*="js.stripe.com"]').first()).toBeAttached({ timeout: 20_000 });
   await expect(page.locator('#buy')).toContainText(/299/);

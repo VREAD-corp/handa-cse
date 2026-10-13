@@ -5,8 +5,13 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const cite = (k) => `<a href="${esc(SOURCES[k].url)}" rel="noopener" target="_blank">${esc(SOURCES[k].label)}</a>`;
 const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="16" cy="16" r="8.5" fill="#0d6b4d"/><path d="M12 16.2l3 3 5.4-6.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-// Price variant (a = PHP 149, b = PHP 299): ?p=a|b overrides, else kept per browser, else 50/50.
-const VARIANT = `<script>(function(){var v;try{v=new URLSearchParams(location.search).get('p');if(v!=='a'&&v!=='b')v=localStorage.getItem('handa.p');if(v!=='a'&&v!=='b')v=Math.random()<.5?'a':'b';localStorage.setItem('handa.p',v)}catch(e){v=v==='a'||v==='b'?v:'a'}window.hVariant=v;window.hPrice=v==='b'?${SITE.prices.b}:${SITE.prices.a}})()</script>`;
+// Price test (a = PHP 149, b = PHP 299), run by the shared cro.js (octave-checkout gas/web/cro.js): ?p=a|b forces a
+// variant, else a 50/50 draw once per browser tab (sessionStorage oxp_price, gone when the tab closes). cro.js loads
+// synchronously before anything reads window.hVariant / window.hPrice. The one-line cleanup removes the old per-browser
+// key (localStorage handa.p, before 13 October 2026).
+const XP = `<script>window.OCTAVE_XP=[{id:'price',variants:['a','b'],mode:'tab',param:'p'}]</script>
+<script src="${B}assets/cro.js?v=__V__" data-site="handa-cse" data-api="${SITE.endpoint}" data-hosts="outils.vread.fr vread-corp.github.io" data-cta="[data-mesure]"></script>
+<script>(function(){var v=window.octaveCro&&octaveCro.v('price');if(v!=='a'&&v!=='b')v='a';window.hVariant=v;window.hPrice=v==='b'?${SITE.prices.b}:${SITE.prices.a};try{localStorage.removeItem('handa.p')}catch(e){}})()</script>`;
 
 export function layout({ path, title, desc, body, active = '', app = '', noindex = false }) {
   const url = SITE.origin + B + path;
@@ -30,7 +35,7 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <link rel="icon" href="${B}assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${B}assets/icon-192.png">
 <link rel="stylesheet" href="${B}assets/style.css?v=__V__">
-${VARIANT}
+${XP}
 </head>
 <body${app ? ` data-page="${app}"` : ''}>
 <a class="skip" href="#main">Skip to content</a>
@@ -80,7 +85,7 @@ export function home(sample, counts) {
     title: 'Handa CSE: free Civil Service Exam reviewer (2027)',
     desc: `Free CSE-PPT reviewer for the ${EXAM.next.label} exam: ${total} original practice questions with explanations and a timed mock at the official length. Professional and Subprofessional.`,
     body: `
-<section class="hero">
+<section class="hero" id="hero">
 <div>
 <span class="kicker">Next exam: ${EXAM.next.label} · filing opens ${EXAM.next.filing}</span>
 <h1>Free reviewer for the Civil Service Exam, Professional and Subprofessional</h1>
@@ -99,26 +104,26 @@ ${sample.stim ? `<div class="stim">${esc(sample.stim)}</div>` : ''}
 </div>
 </section>
 
-<h2>The 2027 exam in numbers</h2>
+<h2 data-section="facts">The 2027 exam in numbers</h2>
 <p>All figures below come from CSC issuances we read on ${SITE.updated}. Each line links to its source, so you can check it yourself.</p>
 ${factsTable()}
 <p class="note">If your 9 August 2026 exam in NCR, or in some testing centers of Region IV and CAR, was suspended because of the Habagat rains, the CSC reset it to 22 November 2026. <span class="cite">${cite('adv16')}</span></p>
 
-<h2>What each level covers</h2>
+<h2 data-section="levels">What each level covers</h2>
 <div class="levels">
 <div class="card"><h3>Professional</h3><p class="muted">${EXAM.levels.pro.scored} test items · ${EXAM.levels.pro.time}</p>${scopeList('pro')}<a class="btn small" href="${B}practice/?level=pro">Practice Professional</a></div>
 <div class="card"><h3>Subprofessional</h3><p class="muted">${EXAM.levels.sub.scored} test items · ${EXAM.levels.sub.time}</p>${scopeList('sub')}<a class="btn small" href="${B}practice/?level=sub">Practice Subprofessional</a></div>
 </div>
 <p class="cite">Scope as published in ${cite('adv10')}. Verbal items are in English and Filipino; the other parts are in English.</p>
 
-<h2>What is in the free reviewer</h2>
+<h2 data-section="reviewer">What is in the free reviewer</h2>
 <div class="two">
 <div>
 <p>The bank has ${counts.verbal} verbal, ${counts.numerical} numerical, ${counts.analytical} analytical, ${counts.clerical} clerical and ${counts.geninfo} general-information items. Every general-information answer cites the article of the 1987 Constitution or the section of the law it comes from, with a link to the full text.</p>
 <p>Practice mode shows the explanation right after you answer. "Balikan ang mga mali" brings back only the items you missed. The mock exam hides the answers until you submit, runs on the official clock, and gives you a score per part.</p>
 <p>What it does not do: it has no actual CSE questions (nobody outside the CSC has them, and pages that sell "leaked" items are scams), and a good mock score is not a guarantee. The CSC computes a general rating and does not publish how raw scores convert, so treat our percentage as practice feedback.</p>
 </div>
-<div class="card">
+<div class="card" data-section="offer">
 <h3 style="margin-top:0">Handa Pass, pre-order</h3>
 <p>Full mock exams, 1,500 questions and a score predictor. <b><span class="js-price">₱${SITE.prices.a}</span> one time</b>, until your 2027 exam.</p>
 <p class="muted">Access by 15 January 2027, or your money back automatically. Card now; GCash and Maya list for later.</p>
@@ -126,7 +131,7 @@ ${factsTable()}
 </div>
 </div>
 
-<h2>Who makes this</h2>
+<h2 data-section="about">Who makes this</h2>
 <p>Handa CSE is made by ${SITE.company.name}, a small software company in Paris, France. Octave, the company's AI agent, wrote the questions from the scope the CSC published for the August 2026 exam, and checked each general-information item against the text of the law on lawphil.net. No item is copied from the CSC or from another reviewer. If you find a mistake, tap "I-report" under the question, or write to <a href="mailto:${SITE.email}">${SITE.email}</a>. We fix it and note the change on the <a href="${B}about/">sources page</a>.</p>
 `,
   });
@@ -204,7 +209,7 @@ export function pass() {
     desc: 'Handa Pass pre-order: full CSE mock exams, 1,500 questions and a score predictor for the 2027 exam. Card pre-order with access by 15 January 2027, or join the GCash/Maya list.',
     body: `
 <div class="two">
-<div>
+<div data-section="hero">
 <span class="kicker">Pre-order · access by 15 January 2027</span>
 <h1>Handa Pass: full mock exams, 1,500 questions and a score predictor</h1>
 <p class="price"><span class="js-price">₱${SITE.prices.a}</span> <small class="muted" style="font-size:1rem;font-weight:400">one time, until your 2027 exam</small></p>
@@ -219,14 +224,14 @@ export function pass() {
 <p class="note">Handa Pass is being built. If you pre-order, we e-mail your access on or before <b>15 January 2027</b>, two months before the ${EXAM.next.label} exam. If we miss that date, we refund the full amount to your card without you having to ask, and you can get a full refund any time before delivery by replying to the receipt e-mail.</p>
 </div>
 <div>
-<div class="card" id="buy-card">
+<div class="card" id="buy-card" data-section="pricing">
 <h2 style="margin-top:0">Pre-order by card</h2>
 <p><b><span class="js-price">₱${SITE.prices.a}</span></b>, charged in pesos by ${SITE.company.name}. Visa, Mastercard and other cards. You get a receipt by e-mail.</p>
 <p><button class="btn" type="button" id="buy-open" data-mesure="checkout_open">Pre-order for <span class="js-price">₱${SITE.prices.a}</span></button></p>
 <div id="buy"></div>
 <p class="muted" style="font-size:.88rem;margin-bottom:0">Buyers in the EU cannot order.</p>
 </div>
-<div class="card" id="signup-card" style="margin-top:16px">
+<div class="card" id="signup-card" data-section="waitlist" style="margin-top:16px">
 <h2 style="margin-top:0">No card? Join the GCash and Maya list</h2>
 <p class="muted">We cannot take GCash or Maya yet. Tell us how you would pay and we e-mail you once when it works. Free, no commitment.</p>
 <form id="signup" novalidate>
@@ -258,7 +263,7 @@ export function pass() {
 </div>
 </div>
 </div>
-<h2>Questions</h2>
+<h2 data-section="faq">Questions</h2>
 <h3>Why a pre-order?</h3>
 <p>We build the 1,500 questions and the extra mock forms only if enough people want them, and we would rather say so than pretend they exist. Paying now reserves the launch price; the refund promise above is written on your receipt.</p>
 <h3>Why only cards?</h3>
@@ -309,8 +314,12 @@ export function privacy() {
 <p>${SITE.company.name}, ${SITE.company.address} (SIREN ${SITE.company.siren}) runs Handa CSE and is the personal information controller for the early-access list, under the Philippine ${cite('dpa')} and, as a French company, under the EU GDPR. Contact for any privacy question or request: <a href="mailto:${SITE.email}">${SITE.email}</a>. We reply within 15 days.</p>
 <h2>Practice and mock results stay on your device</h2>
 <p>Your answers, scores and mock history are saved in your browser's local storage on this device. They are never sent to us. Clearing your browser data deletes them.</p>
-<h2>Anonymous visit counts</h2>
-<p>We count visits without cookies and without any identifier. Each page sends the page path, the event (for example "mock submitted"), the domain of the site that sent you, the campaign tags in the link (utm_source, utm_medium, utm_campaign), the price variant you saw (a or b) and whether your screen is narrower than 768 pixels. We do not send or keep your IP address, browser details or any ID, and hits are added into daily totals. If your browser sends "Do Not Track" or "Global Privacy Control", nothing is sent. Search-engine robots and automated browsers (recognised inside your browser; their signature is not sent) are counted separately, and a page your browser preloads counts only if you open it.</p>
+<h2>Anonymous visit and usage counts</h2>
+<p>We measure how the site is used, in aggregate, without cookies and without any identifier, only to improve this site. Each page sends the page path, the event (for example "mock submitted"), the domain of the site that sent you, the campaign tags in the link (utm_source, utm_medium, utm_campaign), the price variant you saw (a or b) and whether your screen is narrower than 768 pixels.</p>
+<p>Once per page, the site also sends anonymous behaviour counts: how far down the page you scrolled (25, 50, 75 or 100%), which sections you reached, how long it took before your first click on a main button (in broad ranges), which forms were started or sent and, when a form is left unfinished, the <em>name</em> of the last field used (for example "email"), never what you typed. It also counts the questions or panels you open, the domain of links to other sites you follow, technical errors (as an anonymous fingerprint of the error message), how fast the page loaded and responded (Core Web Vitals) and repeated clicks on one spot.</p>
+<p>All of this is added into daily totals per page; we keep no row per visit. We do not send or keep your IP address, browser details, any ID or anything you type, we do not follow you across other sites, and we do not combine these counts with the early-access list, sell them or share them. If your browser sends "Do Not Track" or "Global Privacy Control", nothing is sent. Search-engine robots and automated browsers (recognised inside your browser; their signature is not sent) are counted separately or not at all, and a page your browser preloads counts only if you open it.</p>
+<h2>Price test (A/B)</h2>
+<p>To choose the Handa Pass price, some visitors see ₱${SITE.prices.a} (version a) and others ₱${SITE.prices.b} (version b). The version is drawn at random when you open the site (or set by the link you followed) and kept only for this browser tab, in its session storage, which your browser deletes when you close the tab. It is never linked to you; only the totals per version (pages seen, button clicks, sign-ups, pre-orders) are counted. The price you pay is always the price displayed on the page and on the payment form.</p>
 <h2>Early-access list for Handa Pass</h2>
 <ul class="plain">
 <li><b>What we collect:</b> your e-mail address, the payment method you would use, your level and your exam date, the price you were shown, and the page and campaign you came from.</li>

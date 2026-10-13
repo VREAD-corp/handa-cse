@@ -21,19 +21,21 @@ All in `site/src/config.mjs`, with URLs.
 | `content/questions/*.mjs` | Question bank (verbal 55, numerical 45, analytical 35, clerical 30, general information 50). Rules in `content/BRIEF.md` |
 | `content/validate.mjs` | Schema and style checks; the build refuses an invalid bank |
 | `site/src/pages.mjs`, `config.mjs` | Page templates and official facts; `site/build.mjs` writes `docs/` |
-| `site/assets/app.js` | Practice, mock exam, early-access form. Progress in `localStorage` (`handa.v1`, `handa.mock`, `handa.p`) |
+| `site/assets/app.js` | Practice, mock exam, early-access form. Progress in `localStorage` (`handa.v1`, `handa.mock`) |
 | `site/assets/mesure.js` | Cookieless anonymous counters (same pattern as octave-checkout `gas/web/mesure.js`) |
-| `gas/src/Code.js` | Apps Script web app: `track`, `signup`, `rights`, `ping`, `summary` / `purge_tests` (admin key) |
+| `site/assets/cro.js` | Shared behaviour counters and A/B variants, vendored byte-identical from octave-checkout `gas/web/cro.js` (check: `tests/unit/cro.check.mjs`) |
+| `gas/src/Code.js` | Apps Script web app: `track`, `signup`, `rights`, `ping`, `summary` / `purge_tests` (admin key), `cro` / `cro_init` |
+| `gas/src/Cro.js` | Behaviour and A/B daily counters (tabs `Comportement`, `Experiences`), vendored byte-identical from octave-checkout `gas/src/Cro.js` |
 
 ## Backend
 
 Apps Script project `handa-cse-gas (READ FRANCE SAS)`, script id `12wUN5pbUw32MwjIOknF39ShrMlFjvshsEmyJrSment9Jr4vRdAv8Uc_L`, owner vincent.cance@gmail.com, only scope `spreadsheets`. Web app `https://script.google.com/macros/s/AKfycby4di9DZaiESNkujLeJtDkmL6JPXDNV9aQoXAEhDmCCtrKG205rHYL_yoKfT4cqHtmi6g/exec`. It creates its own Sheet on first use (tabs `Signups`, `Requests`, `Stats`). Separate from octave-checkout. Redeploy: `bash gas/scripts/deploy.sh` (same deployment id). The admin key lives in `~/.config/octave/handa-cse.env` (never committed; the code holds only its SHA-256).
 
-Read the numbers: `. ~/.config/octave/handa-cse.env; curl -sL -d "{\"action\":\"summary\",\"key\":\"$HANDA_ADMIN_KEY\"}" <exec url>` (counts only, no e-mails).
+Read the numbers: `. ~/.config/octave/handa-cse.env; curl -sL -d "{\"action\":\"summary\",\"key\":\"$HANDA_ADMIN_KEY\"}" <exec url>` (counts only, no e-mails; `cro` holds today's behaviour and A/B counters). Weekly CRO report: `action=cro` with the read key registered by `tools/cro-keys.mjs init handa-cse` (vread-revenue-lab).
 
 ## Price test
 
-`?p=a` shows ₱149, `?p=b` ₱299 (evaluation AS-PH-05). Without a parameter each browser gets a random variant, kept in `localStorage`. The variant travels with every tracking hit and sign-up.
+`?p=a` shows ₱149, `?p=b` ₱299 (evaluation AS-PH-05). Run by cro.js: `window.OCTAVE_XP = [{ id: 'price', variants: ['a', 'b'], mode: 'tab', param: 'p' }]` in every page head, then `window.hVariant` / `window.hPrice` from `octaveCro.v('price')`. Without a parameter each browser tab draws 50/50 once (sessionStorage `oxp_price`, gone when the tab closes); before 13 October 2026 the draw was kept per browser in `localStorage.handa.p`, which pages now delete. The variant travels with every tracking hit and sign-up as before; cro.js also counts per variant tabs exposed, first CTA click, forms sent and the goals `signup` (early-access success), `checkout` (payment form opened) and `paid` (og-checkout `onSuccess`). Backend whitelist: `CRO_EXPERIMENTS_` in `gas/src/Code.js`.
 
 ## Commands
 

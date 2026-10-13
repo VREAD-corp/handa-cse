@@ -8,10 +8,14 @@
  *                our own tests with octave_notrack=1) goes to the Exclus tab by reason instead, so the summary
  *                shows counted and raw views side by side. A hit without `v` (old snippet, e.g. cached by a
  *                crawler) is counted there too, as `legacy`.
+ *                With `kind: 'cro'` the hit is the once-per-page behaviour batch of the shared cro.js (Cro.js, vendored
+ *                byte-identical from octave-checkout): daily counters in the Comportement and Experiences tabs.
  *   signup       "Handa Pass" early-access sign-up (fake door: nothing is sold or charged) (Signups tab)
  *   rights       data-subject request under R.A. 10173: withdraw | erase | access | correct (Requests tab)
  *   ping         health check
- *   summary      counts for the operator (admin key; never returns e-mails)
+ *   summary      counts for the operator (admin key; never returns e-mails), with `cro` (today's behaviour and A/B)
+ *   cro          aggregated behaviour and A/B summary for the weekly CRO report (key: Script Property CRO_KEY_SHA256)
+ *   cro_init     POST only: stores the SHA-256 of the CRO read key once
  *   purge_tests  deletes rows created by automated tests (admin key)
  *
  * The spreadsheet is created on first use and its id kept in Script Properties (SHEET_ID).
@@ -43,10 +47,19 @@ var EXCL_KEYS = 5;
 // legacy: a hit without v (snippet before 2026-10-13, still cached by search-engine renderers) cannot be screened.
 var EXCL_REASONS = ['webdriver', 'bot', 'notrack', 'legacy'];
 
+// Shared cro.js counters (src/Cro.js): same site, same spreadsheet, same day boundary and pages as the Stats tab.
+var CRO_SITES_ = APP.sites;
+var CRO_EXPERIMENTS_ = { price: ['a', 'b'] }; // site OCTAVE_XP: id 'price', variants a (PHP 149) / b (PHP 299)
+var CRO_TZ_ = APP.tz;
+function croBook_() { return ss_(); }
+function croPage_(site, page) { return trackPage_(page); }
+
 function doGet(e) { return handle_(e, (e && e.parameter) || {}); }
 
 function doPost(e) {
   var req = {};
+  e = e || {};
+  e.isPost_ = true;
   try { req = JSON.parse((e && e.postData && e.postData.contents) || '{}') || {}; } catch (err) { return json_({ ok: false, error: 'bad_json' }); }
   if (typeof req !== 'object' || Array.isArray(req)) return json_({ ok: false, error: 'bad_json' });
   return handle_(e, req);
@@ -56,7 +69,9 @@ function handle_(e, req) {
   var action = String((e && e.parameter && e.parameter.action) || req.action || '');
   try {
     switch (action) {
-      case 'track': return json_(track_(req));
+      case 'track': return json_(req.kind === 'cro' ? croTrack_(req) : track_(req));
+      case 'cro': return json_(croAction_(req));
+      case 'cro_init': return json_(e && e.isPost_ ? croInit_(req) : { ok: false, error: 'method_not_allowed' });
       case 'signup': return json_(signup_(req));
       case 'rights': return json_(rights_(req));
       case 'summary': return json_(summary_(req));
@@ -331,6 +346,8 @@ function summary_(req) {
     out.excluded[k] = (out.excluded[k] || 0) + Number(r[5] || 0);
     if (r[3] === 'view') { day(d).excluded += Number(r[5] || 0); day(d).raw += Number(r[5] || 0); }
   });
+  var today = phDate_(now_());
+  out.cro = croSummary_(today, today);
   if (req.email) out.hasEmail = su.getLastRow() >= 2 && su.getRange(2, 3, su.getLastRow() - 1, 1).getValues().some(function (r) { return String(r[0]) === String(req.email).toLowerCase(); });
   return out;
 }

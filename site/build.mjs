@@ -88,7 +88,7 @@ fs.writeFileSync(path.join(out, 'manifest.webmanifest'), JSON.stringify({
 }, null, 1));
 const B = SITE.base;
 const precache = PAGES.filter(([, p]) => p !== null).map(([, p]) => B + p)
-  .concat(['assets/style.css', 'assets/app.js', 'assets/mesure.js', 'assets/rights.js', 'assets/q.json', 'assets/icon.svg', 'manifest.webmanifest'].map((a) => B + a));
+  .concat(['assets/style.css', 'assets/app.js', 'assets/cro.js', 'assets/mesure.js', 'assets/rights.js', 'assets/q.json', 'assets/icon.svg', 'manifest.webmanifest'].map((a) => B + a));
 fs.writeFileSync(path.join(out, 'sw.js'), `/* Handa CSE offline cache ${V} */
 const C='handa-${V}',PRE=${JSON.stringify(precache)};
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(PRE)).then(()=>self.skipWaiting()))});
