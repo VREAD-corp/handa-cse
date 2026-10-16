@@ -1,7 +1,7 @@
 export const SITE = {
   brand: 'Handa CSE',
-  origin: 'https://outils.vread.fr',
-  base: '/handa-cse/',
+  origin: 'https://handa.jalonel.com',
+  base: '/',
   endpoint: 'https://script.google.com/macros/s/AKfycby4di9DZaiESNkujLeJtDkmL6JPXDNV9aQoXAEhDmCCtrKG205rHYL_yoKfT4cqHtmi6g/exec',
   indexNowKey: '1091129cb2e39ea34777aaaca8737207',
   consentVersion: 'ea-2026-10-13',

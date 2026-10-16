@@ -1,7 +1,7 @@
 /*! Handa CSE anonymous audience: no cookie, no identifier, no IP stored. Same pattern as octave-checkout gas/web/mesure.js */
 ((n,l,d)=>{let q=new URLSearchParams(l.search),A=(k,f)=>d.addEventListener(k,f,!0),b,t,x='',s,go;
 window.hTrack=()=>{};
-if(n.doNotTrack=='1'||n.globalPrivacyControl||!/^(outils\.vread\.fr|vread-corp\.github\.io)$/.test(l.hostname))return;
+if(n.doNotTrack=='1'||n.globalPrivacyControl||!/^(handa\.jalonel\.com|outils\.vread\.fr|vread-corp\.github\.io)$/.test(l.hostname))return;
 // Not a visit (counted apart as "excluded"): our tests (?octave_notrack=1, kept in this browser, =0 clears), automated browsers, crawlers. The user agent is read here only, never sent.
 try{s=localStorage;q.has('octave_notrack')&&(q.get('octave_notrack')=='1'?s.setItem('octave_notrack','1'):s.removeItem('octave_notrack'));s.getItem('octave_notrack')=='1'&&(x='notrack')}catch{}
 x=x||(q.get('octave_notrack')=='1'?'notrack':n.webdriver?'webdriver':/bot\b|crawl|spider|slurp|headless|lighthouse|pagespeed|inspectiontool|googleother|mediapartners|bingpreview|phantom|puppeteer|playwright|selenium/i.test(n.userAgent||'')?'bot':'');

@@ -10,7 +10,7 @@ const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16
 // synchronously before anything reads window.hVariant / window.hPrice. The one-line cleanup removes the old per-browser
 // key (localStorage handa.p, before 13 October 2026).
 const XP = `<script>window.OCTAVE_XP=[{id:'price',variants:['a','b'],mode:'tab',param:'p'}]</script>
-<script src="${B}assets/cro.js?v=__V__" data-site="handa-cse" data-api="${SITE.endpoint}" data-hosts="outils.vread.fr vread-corp.github.io" data-cta="[data-mesure]"></script>
+<script src="${B}assets/cro.js?v=__V__" data-site="handa-cse" data-api="${SITE.endpoint}" data-hosts="handa.jalonel.com outils.vread.fr vread-corp.github.io" data-cta="[data-mesure]"></script>
 <script>(function(){var v=window.octaveCro&&octaveCro.v('price');if(v!=='a'&&v!=='b')v='a';window.hVariant=v;window.hPrice=v==='b'?${SITE.prices.b}:${SITE.prices.a};try{localStorage.removeItem('handa.p')}catch(e){}})()</script>`;
 
 export function layout({ path, title, desc, body, active = '', app = '', noindex = false }) {
@@ -45,6 +45,7 @@ ${body}
 </div></main>
 <footer class="site"><div class="wrap">
 <p class="disclaim">Handa CSE is an independent reviewer. It is not affiliated with or endorsed by the Civil Service Commission (CSC). Practice items are original and are not actual CSE questions.</p>
+<p class="brand"><a href="https://jalonel.com/en/">A Jalonel brand</a></p>
 <p>Published by ${SITE.company.name} (SIREN ${SITE.company.siren}), ${SITE.company.address}. Built and run by Octave, the company's AI agent. Contact: <a href="mailto:${SITE.email}">${SITE.email}</a></p>
 <p><a href="${B}privacy/">Privacy notice (R.A. 10173)</a> · <a href="${B}terms/">Terms of use</a> · <a href="${B}about/">Sources and method</a> · Updated ${SITE.updated}</p>
 </div></footer>
@@ -296,7 +297,7 @@ ${['adv10', 'ann03', 'ann05', 'results0826', 'adv16'].map((k) => `<li>${cite(k)}
 <p>Tap "I-report" under any question, or write to <a href="mailto:${SITE.email}">${SITE.email}</a> with the question number (for example V-012). We fix confirmed errors and list them here.</p>
 <p class="muted">No corrections yet (site opened ${SITE.updated}).</p>
 <h2>Who we are</h2>
-<p>${SITE.company.name}, ${SITE.company.address}, SIREN ${SITE.company.siren} (${SITE.company.rcs}). Publication director: ${SITE.company.president}. Octave, an AI agent, builds and runs this site for the company and answers e-mail as an AI; a person at the company takes over when needed. We are not affiliated with the Civil Service Commission.</p>
+<p>${SITE.company.name}, ${SITE.company.address}, SIREN ${SITE.company.siren} (${SITE.company.rcs}). Publication director: ${SITE.company.president}. Jalonel is a brand of ${SITE.company.name}. Octave, an AI agent, builds and runs this site for the company and answers e-mail as an AI; a person at the company takes over when needed. We are not affiliated with the Civil Service Commission.</p>
 </div>`,
   });
 }
@@ -363,7 +364,7 @@ export function terms() {
 <div class="narrow">
 <h1>Terms of use</h1>
 <p>Last updated ${SITE.updated}.</p>
-<p>Handa CSE is a free practice tool published by ${SITE.company.name}, ${SITE.company.address} (SIREN ${SITE.company.siren}, ${SITE.company.rcs}). Publication director: ${SITE.company.president}. Contact: <a href="mailto:${SITE.email}">${SITE.email}</a>.</p>
+<p>Handa CSE is a free practice tool published by ${SITE.company.name}, ${SITE.company.address} (SIREN ${SITE.company.siren}, ${SITE.company.rcs}). Publication director: ${SITE.company.president}. Jalonel is a brand of ${SITE.company.name}. Contact: <a href="mailto:${SITE.email}">${SITE.email}</a>.</p>
 <h2>Not affiliated with the CSC</h2>
 <p>Handa CSE is not affiliated with or endorsed by the Civil Service Commission. It does not contain actual examination items. For official information, rely on csc.gov.ph only. Exam dates and rules on this site are copied from CSC issuances with a link; if they differ, the CSC issuance prevails.</p>
 <h2>No guarantee</h2>

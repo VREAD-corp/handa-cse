@@ -38,12 +38,12 @@ test('home: facts, disclaimers, sample question, light page', async ({ page }) =
   await expect(page.locator('.facts')).toContainText('3 hours 10 minutes');
   await expect(page.locator('.facts')).toContainText('14.41%');
   const foot = page.locator('footer');
-  for (const t of ['READ FRANCE SAS', '988 741 773', 'octave@vread.fr', 'Paris', 'not affiliated with', 'Civil Service Commission', 'R.A. 10173', 'Terms of use']) await expect(foot).toContainText(t);
+  for (const t of ['A Jalonel brand', 'READ FRANCE SAS', '988 741 773', 'octave@vread.fr', 'Paris', 'not affiliated with', 'Civil Service Commission', 'R.A. 10173', 'Terms of use']) await expect(foot).toContainText(t);
   await page.locator('#sample .choice').first().click();
   await expect(page.locator('#sample .why')).toBeVisible();
   await expect(page.locator('#sample .choice.right')).toHaveCount(1);
   await noHScroll(page);
-  const bytes = await page.evaluate(() => performance.getEntriesByType('resource').concat(performance.getEntriesByType('navigation')).filter((e) => e.name.includes('/handa-cse/')).reduce((s, e) => s + (e.decodedBodySize || 0), 0));
+  const bytes = await page.evaluate(() => performance.getEntriesByType('resource').concat(performance.getEntriesByType('navigation')).filter((e) => e.name.startsWith(location.origin + '/')).reduce((s, e) => s + (e.decodedBodySize || 0), 0));
   expect(bytes).toBeLessThan(80 * 1024); // home never loads the question bank
   await shot(page, 'home');
 });

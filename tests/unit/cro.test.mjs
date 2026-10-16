@@ -23,7 +23,7 @@ test('every page loads cro.js synchronously, after OCTAVE_XP and before the vari
     const m = head.match(/<script src="[^"]*\/assets\/cro\.js[^"]*"([^>]*)><\/script>/);
     assert.ok(m, name);
     assert.ok(!/\b(defer|async|type=)/.test(m[1]), `${name}: classic blocking script`);
-    assert.match(m[1], new RegExp(`data-site="handa-cse" data-api="${SITE.endpoint.replace(/[.?]/g, '\\$&')}" data-hosts="outils\\.vread\\.fr vread-corp\\.github\\.io"`));
+    assert.match(m[1], new RegExp(`data-site="handa-cse" data-api="${SITE.endpoint.replace(/[.?]/g, '\\$&')}" data-hosts="handa\\.jalonel\\.com outils\\.vread\\.fr vread-corp\\.github\\.io"`));
     assert.ok(html.indexOf('/assets/mesure.js') > html.indexOf('</head>'), `${name}: mesure.js (reads hVariant) comes later`);
     assert.ok(!/handa\.p'\)|getItem\('handa\.p'/.test(html.replace("removeItem('handa.p')", '')), `${name}: no old draw left`);
   }
@@ -37,7 +37,7 @@ function head({ search = '', local = {}, session = {}, random = 0.2 } = {}) {
   const store = (o) => ({ getItem: (k) => (k in o ? o[k] : null), setItem: (k, v) => { o[k] = String(v); }, removeItem: (k) => { delete o[k]; } });
   const doc = { readyState: 'loading', currentScript: null, documentElement: { setAttribute: (k, v) => { attrs[k] = v; } }, querySelectorAll: () => [], addEventListener: () => {} };
   const ctx = {
-    navigator: { userAgent: 'Mozilla/5.0 Chrome/141.0.0.0', webdriver: false }, location: { search, hostname: 'localhost', pathname: '/handa-cse/pass/' },
+    navigator: { userAgent: 'Mozilla/5.0 Chrome/141.0.0.0', webdriver: false }, location: { search, hostname: 'localhost', pathname: '/pass/' },
     document: doc, localStorage: store(local), sessionStorage: store(session), URLSearchParams, Math: Object.assign(Object.create(Math), { random: () => random }),
     addEventListener: () => {}, fetch: () => { throw new Error('nothing is sent from localhost'); },
   };

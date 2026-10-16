@@ -1,7 +1,7 @@
 /* Handa CSE client: practice, timed mock, early-access form. Progress stays in localStorage. */
 (function () {
   'use strict';
-  var B = '/handa-cse/';
+  var B = '/';
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycby4di9DZaiESNkujLeJtDkmL6JPXDNV9aQoXAEhDmCCtrKG205rHYL_yoKfT4cqHtmi6g/exec';
   var CONSENT = 'ea-2026-10-13';
   var MAIL = 'octave@vread.fr';

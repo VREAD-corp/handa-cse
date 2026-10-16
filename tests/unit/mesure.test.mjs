@@ -9,14 +9,14 @@ const src = fs.readFileSync(new URL('../../site/assets/mesure.js', import.meta.u
 const CHROME = 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36';
 const GOOGLEBOT = 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.7390.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
 
-function run({ ua = CHROME, webdriver = false, search = '', store = {}, prerendering = false, visibility = 'visible', dnt = '', host = 'outils.vread.fr' } = {}) {
+function run({ ua = CHROME, webdriver = false, search = '', store = {}, prerendering = false, visibility = 'visible', dnt = '', host = 'handa.jalonel.com' } = {}) {
   const sent = [], listeners = {};
   const on = (k, f) => { (listeners[k] ||= []).push(f); };
   const doc = { referrer: 'https://www.google.com/', prerendering, visibilityState: visibility, addEventListener: on, removeEventListener: (k, f) => { listeners[k] = (listeners[k] || []).filter((g) => g !== f); } };
   const ls = { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = String(v); }, removeItem: (k) => { delete store[k]; } };
   const ctx = {
     navigator: { userAgent: ua, webdriver, doNotTrack: dnt }, document: doc, localStorage: ls, innerWidth: 390, URLSearchParams, JSON, Date,
-    location: { hostname: host, pathname: '/handa-cse/', search }, addEventListener: on, hVariant: 'a',
+    location: { hostname: host, pathname: '/', search }, addEventListener: on, hVariant: 'a',
     fetch: (u, o) => { assert.equal(o.credentials, 'omit'); sent.push(JSON.parse(o.body)); return Promise.resolve(); },
   };
   ctx.window = ctx;
@@ -57,6 +57,15 @@ test('octave_notrack=1 (query, remembered; =0 clears) flags our own tests', () =
 test('Do Not Track and foreign hosts send nothing', () => {
   assert.equal(run({ dnt: '1' }).sent.length, 0);
   assert.equal(run({ host: 'localhost' }).sent.length, 0);
+  assert.equal(run({ host: 'evil.jalonel.com' }).sent.length, 0);
+});
+
+test('the site is counted on handa.jalonel.com and on the old hosts, always as site handa-cse', () => {
+  for (const host of ['handa.jalonel.com', 'outils.vread.fr', 'vread-corp.github.io']) {
+    const r = run({ host });
+    assert.equal(r.sent.length, 1, host);
+    assert.equal(r.sent[0].site, 'handa-cse', host);
+  }
 });
 
 test('prerendered pages count only once opened', () => {

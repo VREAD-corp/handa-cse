@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://outils.vread.fr/handa-cse/</loc><lastmod>2026-10-13</lastmod><priority>1.0</priority></url>
-<url><loc>https://outils.vread.fr/handa-cse/practice/</loc><lastmod>2026-10-13</lastmod><priority>0.9</priority></url>
-<url><loc>https://outils.vread.fr/handa-cse/mock/</loc><lastmod>2026-10-13</lastmod><priority>0.9</priority></url>
-<url><loc>https://outils.vread.fr/handa-cse/pass/</loc><lastmod>2026-10-13</lastmod><priority>0.6</priority></url>
-<url><loc>https://outils.vread.fr/handa-cse/about/</loc><lastmod>2026-10-13</lastmod><priority>0.5</priority></url>
-<url><loc>https://outils.vread.fr/handa-cse/privacy/</loc><lastmod>2026-10-13</lastmod><priority>0.2</priority></url>
-<url><loc>https://outils.vread.fr/handa-cse/terms/</loc><lastmod>2026-10-13</lastmod><priority>0.2</priority></url>
+<url><loc>https://handa.jalonel.com/</loc><lastmod>2026-10-13</lastmod><priority>1.0</priority></url>
+<url><loc>https://handa.jalonel.com/practice/</loc><lastmod>2026-10-13</lastmod><priority>0.9</priority></url>
+<url><loc>https://handa.jalonel.com/mock/</loc><lastmod>2026-10-13</lastmod><priority>0.9</priority></url>
+<url><loc>https://handa.jalonel.com/pass/</loc><lastmod>2026-10-13</lastmod><priority>0.6</priority></url>
+<url><loc>https://handa.jalonel.com/about/</loc><lastmod>2026-10-13</lastmod><priority>0.5</priority></url>
+<url><loc>https://handa.jalonel.com/privacy/</loc><lastmod>2026-10-13</lastmod><priority>0.2</priority></url>
+<url><loc>https://handa.jalonel.com/terms/</loc><lastmod>2026-10-13</lastmod><priority>0.2</priority></url>
 </urlset>
