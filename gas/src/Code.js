@@ -29,7 +29,7 @@ var APP = {
   adminHash: 'a3fa8460047014dd7e261efdef4c00681f7a2c3393f2d7a0b718cf5e3956b829',
   sites: ['handa-cse'],
   events: ['view', 'cta_click', 'drill_start', 'drill_done', 'mock_start', 'mock_submit', 'pass_view', 'pass_open', 'checkout_open', 'signup_submit', 'signup_ok', 'install', 'report_q'],
-  ownHosts: ['handa.jalonel.com', 'jalonel.com', 'outils.vread.fr', 'vread-corp.github.io'],
+  ownHosts: ['handa.jalonel.com', 'outils.vread.fr', 'vread-corp.github.io'],
   prices: { a: 149, b: 299 },
   levels: ['pro', 'sub', 'both', 'unsure'],
   sittings: ['2027-03', '2027-08', 'later', 'unsure'],
