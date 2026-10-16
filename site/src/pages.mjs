@@ -312,7 +312,7 @@ export function privacy() {
 <h1>Privacy notice</h1>
 <p>Last updated ${SITE.updated}.</p>
 <h2>Who is responsible</h2>
-<p>${SITE.company.name}, ${SITE.company.address} (SIREN ${SITE.company.siren}) runs Handa CSE and is the personal information controller for the early-access list, under the Philippine ${cite('dpa')} and, as a French company, under the EU GDPR. Contact for any privacy question or request: <a href="mailto:${SITE.email}">${SITE.email}</a>. We reply within 15 days.</p>
+<p>${SITE.company.name}, ${SITE.company.address} (SIREN ${SITE.company.siren}) runs Handa CSE and is the personal information controller for the early-access list, under the Philippine ${cite('dpa')} and, as a French company, under the EU GDPR. Contact for any privacy question or request: <a href="mailto:${SITE.email}">${SITE.email}</a>. We reply within 15 days. Jalonel is a brand of ${SITE.company.name}.</p>
 <h2>Practice and mock results stay on your device</h2>
 <p>Your answers, scores and mock history are saved in your browser's local storage on this device. They are never sent to us. Clearing your browser data deletes them.</p>
 <h2>Anonymous visit and usage counts</h2>

@@ -1,5 +1,5 @@
-/* Handa CSE offline cache e18d2b04c3 */
-const C='handa-e18d2b04c3',PRE=["/","/practice/","/mock/","/pass/","/about/","/privacy/","/terms/","/assets/style.css","/assets/app.js","/assets/cro.js","/assets/mesure.js","/assets/rights.js","/assets/q.json","/assets/icon.svg","/manifest.webmanifest"];
+/* Handa CSE offline cache 7e5c95035b */
+const C='handa-7e5c95035b',PRE=["/","/practice/","/mock/","/pass/","/about/","/privacy/","/terms/","/assets/style.css","/assets/app.js","/assets/cro.js","/assets/mesure.js","/assets/rights.js","/assets/q.json","/assets/icon.svg","/manifest.webmanifest"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(PRE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C&&k.startsWith('handa-')).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const r=e.request,u=new URL(r.url);if(r.method!=='GET'||u.origin!==location.origin||!u.pathname.startsWith('/'))return;

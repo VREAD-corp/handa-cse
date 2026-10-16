@@ -3,7 +3,7 @@ export const SITE = {
   origin: 'https://handa.jalonel.com',
   base: '/',
   endpoint: 'https://script.google.com/macros/s/AKfycby4di9DZaiESNkujLeJtDkmL6JPXDNV9aQoXAEhDmCCtrKG205rHYL_yoKfT4cqHtmi6g/exec',
-  indexNowKey: '1091129cb2e39ea34777aaaca8737207',
+  indexNowKey: '5be19f56d46ca3d2553bee28ebfa8edd',
   consentVersion: 'ea-2026-10-13',
   updated: '13 October 2026',
   updatedIso: '2026-10-13',
