@@ -4,7 +4,7 @@
   var B = '/';
   var ENDPOINT = 'https://script.google.com/macros/s/AKfycby4di9DZaiESNkujLeJtDkmL6JPXDNV9aQoXAEhDmCCtrKG205rHYL_yoKfT4cqHtmi6g/exec';
   var CONSENT = 'ea-2026-10-13';
-  var MAIL = 'octave@vread.fr';
+  var MAIL = 'contact@jalonel.com';
   var V = document.documentElement.getAttribute('data-v') || '';
   var SECTIONS = {
     verbal: { name: 'Verbal ability', levels: ['pro', 'sub'] },

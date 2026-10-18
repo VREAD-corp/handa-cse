@@ -38,7 +38,7 @@ test('home: facts, disclaimers, sample question, light page', async ({ page }) =
   await expect(page.locator('.facts')).toContainText('3 hours 10 minutes');
   await expect(page.locator('.facts')).toContainText('14.41%');
   const foot = page.locator('footer');
-  for (const t of ['A Jalonel brand', 'READ FRANCE SAS', '988 741 773', 'octave@vread.fr', 'Paris', 'not affiliated with', 'Civil Service Commission', 'R.A. 10173', 'Terms of use']) await expect(foot).toContainText(t);
+  for (const t of ['A Jalonel brand', 'READ FRANCE SAS', '988 741 773', 'contact@jalonel.com', 'Paris', 'not affiliated with', 'Civil Service Commission', 'R.A. 10173', 'Terms of use']) await expect(foot).toContainText(t);
   await page.locator('#sample .choice').first().click();
   await expect(page.locator('#sample .why')).toBeVisible();
   await expect(page.locator('#sample .choice.right')).toHaveCount(1);
@@ -59,7 +59,7 @@ test('practice: 10-item drill with explanations, progress kept', async ({ page }
     await expect(page.locator('#drill .qmeta')).toContainText(`Tanong ${i} / 10`);
     await page.locator('#drill .choice').nth(i % 4).click();
     await expect(page.locator('#drill .why')).toContainText('Paliwanag');
-    await expect(page.locator('#drill a.linkbtn')).toHaveAttribute('href', /mailto:octave@vread\.fr/);
+    await expect(page.locator('#drill a.linkbtn')).toHaveAttribute('href', /mailto:contact@jalonel\.com/);
     if (i === 3) await shot(page, 'practice-question');
     await page.locator('#drill [data-act=next]').click();
   }

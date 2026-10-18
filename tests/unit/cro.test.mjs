@@ -23,7 +23,7 @@ test('every page loads cro.js synchronously, after OCTAVE_XP and before the vari
     const m = head.match(/<script src="[^"]*\/assets\/cro\.js[^"]*"([^>]*)><\/script>/);
     assert.ok(m, name);
     assert.ok(!/\b(defer|async|type=)/.test(m[1]), `${name}: classic blocking script`);
-    assert.match(m[1], new RegExp(`data-site="handa-cse" data-api="${SITE.endpoint.replace(/[.?]/g, '\\$&')}" data-hosts="handa\\.jalonel\\.com outils\\.vread\\.fr vread-corp\\.github\\.io"`));
+    assert.match(m[1], new RegExp(`data-site="handa-cse" data-api="${SITE.endpoint.replace(/[.?]/g, '\\$&')}" data-hosts="handa\\.jalonel\\.com"`));
     assert.ok(html.indexOf('/assets/mesure.js') > html.indexOf('</head>'), `${name}: mesure.js (reads hVariant) comes later`);
     assert.ok(!/handa\.p'\)|getItem\('handa\.p'/.test(html.replace("removeItem('handa.p')", '')), `${name}: no old draw left`);
   }
@@ -74,9 +74,10 @@ test('backend whitelist matches the site experiment', () => {
   assert.match(code, /req\.kind === 'cro' \? croTrack_\(req\) : track_\(req\)/);
 });
 
+// cro.js is the Jalonel build (web/jalonel/cro.js: no default reading-site host); cro.check.mjs is its Jalonel variant (own host).
 test('vendored cro.js and Cro.js are byte-identical to octave-checkout', (t) => {
   const canon = new URL('octave-checkout/gas/', new URL('../../../', import.meta.url).href.replace(/worktrees\/$/, ''));
-  const pairs = [['site/assets/cro.js', 'web/cro.js'], ['gas/src/Cro.js', 'src/Cro.js'], ['tests/unit/cro.check.mjs', 'web/cro.check.mjs'], ['tests/unit/cro-gas.check.mjs', 'web/cro-gas.check.mjs']];
-  if (!fs.existsSync(new URL('web/cro.js', canon))) { t.skip('octave-checkout not checked out next to this repo'); return; }
+  const pairs = [['site/assets/cro.js', 'web/jalonel/cro.js'], ['gas/src/Cro.js', 'src/Cro.js'], ['tests/unit/cro-gas.check.mjs', 'web/cro-gas.check.mjs']];
+  if (!fs.existsSync(new URL('web/jalonel/cro.js', canon))) { t.skip('octave-checkout not checked out next to this repo'); return; }
   for (const [mine, theirs] of pairs) assert.equal(read(mine), fs.readFileSync(new URL(theirs, canon), 'utf8'), mine);
 });

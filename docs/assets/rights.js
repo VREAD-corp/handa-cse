@@ -14,6 +14,6 @@
         msg.className = 'msg ok';
         msg.textContent = r.status === 'done_automatically' ? (r.matched ? 'Done. Your e-mail was removed from the list.' : 'Done. This e-mail was not on the list.') : 'Received. We reply by e-mail within 15 days.';
         f.reset(); b.disabled = false;
-      }).catch(function () { b.disabled = false; msg.className = 'msg err'; msg.innerHTML = 'Not sent. Please e-mail <a href="mailto:octave@vread.fr">octave@vread.fr</a> instead.'; });
+      }).catch(function () { b.disabled = false; msg.className = 'msg err'; msg.innerHTML = 'Not sent. Please e-mail <a href="mailto:contact@jalonel.com">contact@jalonel.com</a> instead.'; });
   });
 })();

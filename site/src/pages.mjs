@@ -10,7 +10,7 @@ const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16
 // synchronously before anything reads window.hVariant / window.hPrice. The one-line cleanup removes the old per-browser
 // key (localStorage handa.p, before 13 October 2026).
 const XP = `<script>window.OCTAVE_XP=[{id:'price',variants:['a','b'],mode:'tab',param:'p'}]</script>
-<script src="${B}assets/cro.js?v=__V__" data-site="handa-cse" data-api="${SITE.endpoint}" data-hosts="handa.jalonel.com outils.vread.fr vread-corp.github.io" data-cta="[data-mesure]"></script>
+<script src="${B}assets/cro.js?v=__V__" data-site="handa-cse" data-api="${SITE.endpoint}" data-hosts="handa.jalonel.com" data-cta="[data-mesure]"></script>
 <script>(function(){var v=window.octaveCro&&octaveCro.v('price');if(v!=='a'&&v!=='b')v='a';window.hVariant=v;window.hPrice=v==='b'?${SITE.prices.b}:${SITE.prices.a};try{localStorage.removeItem('handa.p')}catch(e){}})()</script>`;
 
 export function layout({ path, title, desc, body, active = '', app = '', noindex = false }) {

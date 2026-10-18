@@ -60,12 +60,11 @@ test('Do Not Track and foreign hosts send nothing', () => {
   assert.equal(run({ host: 'evil.jalonel.com' }).sent.length, 0);
 });
 
-test('the site is counted on handa.jalonel.com and on the old hosts, always as site handa-cse', () => {
-  for (const host of ['handa.jalonel.com', 'outils.vread.fr', 'vread-corp.github.io']) {
-    const r = run({ host });
-    assert.equal(r.sent.length, 1, host);
-    assert.equal(r.sent[0].site, 'handa-cse', host);
-  }
+test('the site is counted on handa.jalonel.com only, always as site handa-cse', () => {
+  const r = run({ host: 'handa.jalonel.com' });
+  assert.equal(r.sent.length, 1);
+  assert.equal(r.sent[0].site, 'handa-cse');
+  assert.equal(run({ host: 'other.example' }).sent.length, 0);
 });
 
 test('prerendered pages count only once opened', () => {
